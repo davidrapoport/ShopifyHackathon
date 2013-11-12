@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class ProblemInterface extends Activity{
@@ -30,11 +31,14 @@ public class ProblemInterface extends Activity{
 	    	}
 	    	});
 		final Button submit = (Button) findViewById(R.id.submit);
+		final EditText answer = (EditText) findViewById(R.id.solution);
 		submit.setOnClickListener(new OnClickListener(){
 			
 			@Override
 			public void onClick(View v){
-				
+				String dataBaseAnswer = "";
+				String userInput = answer.getText().toString();
+				if(userInput.equals(dataBaseAnswer)); //Show something
 			}
 			
 		});
