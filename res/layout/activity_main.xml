@@ -16,10 +16,9 @@
 
     <Button
         android:id="@+id/Practice"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="160dp"
+        android:layout_height="75dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="84dp"
-        android:layout_toRightOf="@+id/textView1" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -2,7 +2,6 @@ package com.McGillShopify.DMA.math140;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -17,14 +16,15 @@ public class MainActivity extends Activity {
 		
 		
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_main);
 		
 		final Button b = (Button) findViewById(R.id.Practice);
-		b.setText("Click here for problem interface");
-		String firstrun ="" + getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("firstTime", "yes first run");
+		b.setText("Click here for problem i-nterface");
+		String firstrun =getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("firstTime", "first run");
 		TextView tv = (TextView) findViewById(R.id.textView1);
 		tv.setText(firstrun);
-	    if (firstrun.equals("yes first run")){
+	    if (firstrun.equals("first run")){
 	    
 	    b.setText("FIRST TIME YO");
 	    // Save the state
@@ -38,10 +38,10 @@ public class MainActivity extends Activity {
 		    	
 		    	@Override
 		    	public void onClick(View v){
-		    		SharedPreferences sp = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
-		    		b.setText(""+sp.getString("firstTime", "NOTHING SAVED"));
+		    		//SharedPreferences sp = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+		    		//b.setText(""+sp.getString("firstTime", "NOTHING SAVED"));
 		    		Intent i = new Intent(getApplicationContext(), ProblemInterface.class);
-		    		//startActivity(i);
+		    		startActivity(i);
 		    		
 		    	}
 		});

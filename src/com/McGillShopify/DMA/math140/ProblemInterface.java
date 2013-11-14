@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class ProblemInterface extends Activity{
 	@Override
 	// Find out what level the person is at
-	//Next, hint, previous, show answer, show hint
+	// show answer, show hint
 	//submit button w/ listener
 	//accept input as picture (place holder for now), maybe implement constructor.
 	//Ihsan topaloglu
@@ -20,6 +20,7 @@ public class ProblemInterface extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.problem_inter);
 		final Button hint = (Button) findViewById(R.id.hint);
+		
 		hint.setOnClickListener(new OnClickListener(){
 	    	
 	    	@Override
@@ -37,6 +38,11 @@ public class ProblemInterface extends Activity{
 			@Override
 			public void onClick(View v){
 				String dataBaseAnswer = "";
+				dataBaseAnswer=dataBaseAnswer.toUpperCase();
+				if(dataBaseAnswer.contains("Exp")){
+					dataBaseAnswer=dataBaseAnswer.replace("Exp[", "e^");
+					dataBaseAnswer=dataBaseAnswer.replace("]", "");
+				}
 				String userInput = answer.getText().toString();
 				if(userInput.equals(dataBaseAnswer)); //Show something
 			}

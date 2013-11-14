@@ -7,5 +7,7 @@
     <string name= "The_problem">The Problem</string>
     <string name="Submit">Submit</string>
     <string name="Hint">Hint</string>
+    <string name="Next">Next</string>
+    <string name="Previous">Previous</string>
 
 </resources>
