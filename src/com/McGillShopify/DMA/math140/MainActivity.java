@@ -3,6 +3,7 @@ package com.McGillShopify.DMA.math140;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +22,17 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		final Button b = (Button) findViewById(R.id.Practice);
-		b.setText("Click here for problem i-nterface");
+		b.setText("Click here for problem interface");
 		String firstrun =getSharedPreferences("PREFERENCE", MODE_PRIVATE).getString("firstTime", "first run");
 		TextView tv = (TextView) findViewById(R.id.textView1);
 		tv.setText(firstrun);
+		PictureDatabase pd= new PictureDatabase(this.getApplicationContext());
+		try{
+		
+		tv.setText(pd.test());
+		} catch(Exception e){Log.w("Error",e.toString());tv.setText(e.toString());}
 	    if (firstrun.equals("first run")){
-	    
+	   
 	    b.setText("FIRST TIME YO");
 	    // Save the state
 	    getSharedPreferences("PREFERENCE", MODE_PRIVATE)
