@@ -1,7 +1,12 @@
 package com.McGillShopify.DMA.math140;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,8 +33,10 @@ public class MainActivity extends Activity {
 		tv.setText(firstrun);
 		PictureDatabase pd= new PictureDatabase(this.getApplicationContext());
 		try{
+			
+			pd.populate(this);
+			pd.close();
 		
-		tv.setText(pd.test());
 		} catch(Exception e){Log.w("Error",e.toString());tv.setText(e.toString());}
 	    if (firstrun.equals("first run")){
 	   

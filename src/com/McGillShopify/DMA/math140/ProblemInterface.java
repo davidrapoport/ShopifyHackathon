@@ -1,12 +1,19 @@
 package com.McGillShopify.DMA.math140;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ProblemInterface extends Activity{
@@ -20,7 +27,15 @@ public class ProblemInterface extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.problem_inter);
 		final Button hint = (Button) findViewById(R.id.hint);
-		
+		//InputStream in = am.open("mathematica_rationalpolylimits_answers.txt");
+		//BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		ImageView iv = (ImageView) findViewById(R.id.problem);
+		PictureDatabase pd = new PictureDatabase(getApplicationContext());
+		String s =pd.getTest();
+		if(s.equals(null)) System.out.println("String is null");
+		byte[] b = Base64.decode(pd.getTest(), Base64.DEFAULT);
+		Bitmap bm = BitmapFactory.decodeByteArray(b,0,b.length);
+		iv.setImageBitmap(bm);
 		hint.setOnClickListener(new OnClickListener(){
 	    	
 	    	@Override
