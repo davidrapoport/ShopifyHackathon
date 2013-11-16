@@ -21,7 +21,8 @@ import android.util.Log;
 
 public class PictureDatabase extends SQLiteOpenHelper{
 	private static final String DATABASE_NAME = "PictureDatabase";
-	private static final String TABLE_NAME = "PictureTable";
+	private static final String TABLE_NAME_RATPOLY = "RATIONALPOLYLIMITS";
+	private static final String TABLE_NAME_POLYDERIV= "POLYNOMIALDERIVATIVES";
 	private static final int versionNumb = 1;
 	//private static final String[] typesOfProblems = {"RationalPolyLimits"};//add more as needed
 	
@@ -34,8 +35,10 @@ public class PictureDatabase extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase arg0) {
-		String toCreate = "CREATE TABLE " + TABLE_NAME +"(FolderName TEXT, imageBitmap TEXT, seen BOOLEAN, answer TEXT)";
-		arg0.execSQL(toCreate);
+		String toCreateRatPoly = "CREATE TABLE " + TABLE_NAME_RATPOLY +"( imageBitmap TEXT, seen TEXT, answer TEXT)";
+		String toCreatePolyDeriv = "CREATE TABLE " + TABLE_NAME_POLYDERIV +"( imageBitmap TEXT, seen TEXT, answer TEXT)";
+		arg0.execSQL(toCreateRatPoly);
+		arg0.execSQL(toCreatePolyDeriv);
 		// TODO Auto-generated method stub
 		
 	}
@@ -43,7 +46,8 @@ public class PictureDatabase extends SQLiteOpenHelper{
 	@Override
 	public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
 		// TODO Auto-generated method stub
-		arg0.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
+		arg0.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME_RATPOLY);
+		arg0.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME_POLYDERIV);
 		onCreate(arg0);
 		
 	}
@@ -70,11 +74,11 @@ public class PictureDatabase extends SQLiteOpenHelper{
 				        byte [] b=baos.toByteArray();
 				        String temp=Base64.encodeToString(b, Base64.DEFAULT);
 				          
-						vals.put("FolderName", types);
+						//vals.put("FolderName", types.toUpperCase());
 						vals.put("imageBitmap", temp);
-						vals.put("seen", false);
+						vals.put("seen", "false");
 						vals.put("answer",answer);
-						db.insert(TABLE_NAME,null,vals);
+						db.insert(types.toUpperCase(),null,vals);
 					}
 					else{
 						Log.w("Picture error","Could not find picture "+types+counter);
@@ -89,15 +93,45 @@ public class PictureDatabase extends SQLiteOpenHelper{
 	public String getTest(){
 		SQLiteDatabase db = getReadableDatabase();
 		//check if empty
-		Cursor curs = db.query(TABLE_NAME, new String[] {"imageBitmap"}, "answer='1/4'", null, null, null, null);
+		Cursor curs = db.query(TABLE_NAME_RATPOLY, new String[] {"imageBitmap"}, "answer='1/4'", null, null, null, null);
 		if(curs !=null){
 			curs.moveToFirst();
-			System.out.println(curs.getCount());
+			
 			return curs.getString(0);
 		}
 		return null;
 		
 	}
+	public String[] getUnseenRandom(Context context, String typeOfProblem){
+		//Throw an exception if no more are left
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor test = db.query(typeOfProblem.toUpperCase(), new String[] {"imageBitmap","seen","answer"}, null, null, null, null, null);
+		Log.w("cursor test if empty", "" + test.moveToLast());
+		Log.w("cursor test for last row answer", test.getString(2));
+		test.close();
+		Cursor curs = db.query(typeOfProblem.toUpperCase(), new String[] {"imageBitmap","seen","answer"}, "seen='false'", null, null, null, null);
+		
+		String[] picAndAnswers = new String[2];
+		if(curs != null){
+			curs.moveToNext();
+			picAndAnswers[0] = curs.getString(0);
+			picAndAnswers[1] = curs.getString(2);
+			curs.close();
+			ContentValues vals = new ContentValues();
+			vals.put("imageBitmap", picAndAnswers[0]);
+			vals.put("seen", "'true'");
+			vals.put("answer",picAndAnswers[1]);
+			int affected = db.update(typeOfProblem.toUpperCase(), vals, "imageBitmap='"+picAndAnswers[0]+"'", null);
+			if(affected != 1)
+			Log.w("Update Error", ""+affected+" rows affected by update on call to getUnseenRandom");
+			
+			
+			return picAndAnswers;	
+		}
+		else{System.out.println("null cursor");}
+		return picAndAnswers;
+	}
+	
 	}
 
 

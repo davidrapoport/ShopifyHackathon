@@ -1,13 +1,7 @@
 package com.McGillShopify.DMA.math140;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,15 +21,12 @@ public class ProblemInterface extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.problem_inter);
 		final Button hint = (Button) findViewById(R.id.hint);
-		//InputStream in = am.open("mathematica_rationalpolylimits_answers.txt");
-		//BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		ImageView iv = (ImageView) findViewById(R.id.problem);
-		PictureDatabase pd = new PictureDatabase(getApplicationContext());
-		String s =pd.getTest();
+		final ImageView iv = (ImageView) findViewById(R.id.problem);
+		final PictureDatabase pd = new PictureDatabase(getApplicationContext());
+		String[] s =pd.getUnseenRandom(this.getApplicationContext(), "RationalPolyLimits");
+		iv.setImageBitmap(Methods.StringToBitMap(s[0]));
+		
 		if(s.equals(null)) System.out.println("String is null");
-		byte[] b = Base64.decode(pd.getTest(), Base64.DEFAULT);
-		Bitmap bm = BitmapFactory.decodeByteArray(b,0,b.length);
-		iv.setImageBitmap(bm);
 		hint.setOnClickListener(new OnClickListener(){
 	    	
 	    	@Override
@@ -48,6 +39,7 @@ public class ProblemInterface extends Activity{
 	    	});
 		final Button submit = (Button) findViewById(R.id.submit);
 		final EditText answer = (EditText) findViewById(R.id.solution);
+		final Button next = (Button) findViewById(R.id.next);
 		submit.setOnClickListener(new OnClickListener(){
 			
 			@Override
@@ -60,6 +52,15 @@ public class ProblemInterface extends Activity{
 				}
 				String userInput = answer.getText().toString();
 				if(userInput.equals(dataBaseAnswer)); //Show something
+			}
+			
+		});
+		next.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				String[] nextPic = pd.getUnseenRandom(getApplicationContext(), "RationalPolyLimits");
+				iv.setImageBitmap(Methods.StringToBitMap(nextPic[0]));
 			}
 			
 		});
