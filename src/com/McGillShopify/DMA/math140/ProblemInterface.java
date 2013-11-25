@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ProblemInterface extends Activity{
@@ -71,7 +72,17 @@ public class ProblemInterface extends Activity{
 					dataBaseAnswer=dataBaseAnswer.replace("]", ")");
                 }
 				String userInput = answer.getText().toString();
-				if(userInput.equals(dataBaseAnswer)); //Show something
+				if(userInput.equals(dataBaseAnswer){
+					CharSequence text = "Good Job!";
+					int duration = Toast.LENGTH_SHORT;
+					Toast toast = Toast.makeText(context, text, duration);
+					toast.show();
+                    String [] nextPic=pd.getUnseenRandom(context),"RationalPolyLimits");
+                    try{
+                        iv.setImageDrawable(Drawable.createFromStream(getAssets().open(nextPic[0]), ""));}
+                    catch(Exception e){}
+                
+				});
 			}
 			
 		});
