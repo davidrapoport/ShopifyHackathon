@@ -59,10 +59,17 @@ public class ProblemInterface extends Activity{
 			public void onClick(View v){
 				String dataBaseAnswer = "";
 				dataBaseAnswer=dataBaseAnswer.toUpperCase();
-				if(dataBaseAnswer.contains("Exp")){
-					dataBaseAnswer=dataBaseAnswer.replace("Exp[", "e^");
-					dataBaseAnswer=dataBaseAnswer.replace("]", "");
+				if(dataBaseAnswer.contains("E")){
+					dataBaseAnswer=dataBaseAnswer.replace("E^", "e^");
 				}
+                if(dataBaseAnswer.contains("Sin")){
+					dataBaseAnswer=dataBaseAnswer.replace("Sin[","sin(");
+					dataBaseAnswer=dataBaseAnswer.replace("]", ")");
+				}
+				if(dataBaseAnswer.contains("Cos")){
+					dataBaseAnswer=dataBaseAnswer.replace("Cos[", "cos(");
+					dataBaseAnswer=dataBaseAnswer.replace("]", ")");
+                }
 				String userInput = answer.getText().toString();
 				if(userInput.equals(dataBaseAnswer)); //Show something
 			}

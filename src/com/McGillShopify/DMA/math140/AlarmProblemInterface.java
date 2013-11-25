@@ -39,9 +39,8 @@ public class AlarmProblemInterface extends Activity {
 			@Override
 			public void onClick(View v){
 				String dataBaseAnswer = "";
-				if(dataBaseAnswer.contains("Exp")){
-					dataBaseAnswer=dataBaseAnswer.replace("Exp[", "e^");
-					dataBaseAnswer=dataBaseAnswer.replace("]", "");
+				if(dataBaseAnswer.contains("E")){
+					dataBaseAnswer=dataBaseAnswer.replace("E^", "e^");
 				}
 				if(dataBaseAnswer.contains("Sin")){
 					dataBaseAnswer=dataBaseAnswer.replace("Sin[","sin(");
