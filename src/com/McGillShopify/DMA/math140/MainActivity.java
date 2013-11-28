@@ -1,5 +1,8 @@
 package com.McGillShopify.DMA.math140;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,21 +31,24 @@ public class MainActivity extends Activity {
 		tv.setText(firstrun);
 		PictureDatabase pd= new PictureDatabase(this.getApplicationContext());
 		try{
-			//if(firstrun.equals("first run"))
+			if(firstrun.equals("first run")){
 			pd.populate(this);
-			//pd.getUnseenRandom(this.getApplicationContext(), "RationalPolyLimits");
 			pd.close();
-		
+			Set<String> problemTypes=new LinkedHashSet<String>(); //Find better Set implementation so that order is preserved. 
+			int pointer =0;
+			getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+				.putInt("LevelCounter", pointer)
+				.putStringSet("Levels", problemTypes)
+				.putBoolean("CompletedAll", false)
+				.commit();
+			b.setText("FIRST TIME YO");
+		    // Save the state
+		    getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+		        .edit()
+		        .putString("firstTime", "NOT FIRST RUN")
+		        .commit();
+			}
 		} catch(Exception e){Log.w("Error1",e.toString());tv.setText(e.toString());}
-	    if (firstrun.equals("first run")){
-	   
-	    b.setText("FIRST TIME YO");
-	    // Save the state
-	    getSharedPreferences("PREFERENCE", MODE_PRIVATE)
-	        .edit()
-	        .putString("firstTime", "NOT FIRST RUN")
-	        .commit();
-	    }
 		
 		b.setOnClickListener(new OnClickListener(){
 		    	
@@ -51,6 +57,7 @@ public class MainActivity extends Activity {
 		    		//SharedPreferences sp = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
 		    		//b.setText(""+sp.getString("firstTime", "NOTHING SAVED"));
 		    		Intent i = new Intent(getApplicationContext(), ProblemInterface.class);
+		    	
 		    		startActivity(i);
 		    		
 		    	}

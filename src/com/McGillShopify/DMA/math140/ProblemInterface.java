@@ -1,6 +1,7 @@
 package com.McGillShopify.DMA.math140;
 
-import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,10 @@ import android.widget.Toast;
 
 
 public class ProblemInterface extends Activity{
+	static boolean neverClicked= true;
+	static boolean allDone;
+	static int pointer;
+	String[] picAndAnswer;
 	@Override
 	// Find out what level the person is at
 	// show answer, show hint
@@ -24,21 +29,24 @@ public class ProblemInterface extends Activity{
 	//accept input as picture (place holder for now), maybe implement constructor.
 	//Ihsan topaloglu
 	protected void onCreate(Bundle savedInstanceState) {
+		pointer = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getInt("LevelCounter",-1);
+		Set<String> problemLevel= getSharedPreferences("PREFERENCE",MODE_PRIVATE).getStringSet("Levels", null);
+		allDone= getSharedPreferences("PREFERENCE",MODE_PRIVATE).getBoolean("CompletedAll", false);
+		final String[] thisllDoForNow= (String[]) problemLevel.toArray();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.problem_inter);
 		final Button hint = (Button) findViewById(R.id.hint);
 		final ImageView iv = (ImageView) findViewById(R.id.problem);
-	
-	   //try{ iv.setImageDrawable(Drawable.createFromStream(this.getAssets().open("RationalPolyLimits/mathematica_rationalpolylimits_3.png"),""));
-	  
-	  // getApplicationContext().getAssets().open("RationalPolyLimits/mathematica_rationalpolylimits_2.png");}
-	 // catch(Exception e){
-		//   Log.w("picture error",e.toString());
-	  // }
 		final PictureDatabase pd = new PictureDatabase(getApplicationContext());
-		String[] s =pd.getUnseenRandom(this.getApplicationContext(), "RationalPolyLimits");
 		try{
-		iv.setImageDrawable(Drawable.createFromStream(getAssets().open(s[0]), ""));
+			if(!allDone){
+				picAndAnswer =pd.getUnseenRandom(this.getApplicationContext(), thisllDoForNow[pointer]);
+				iv.setImageDrawable(Drawable.createFromStream(getAssets().open(picAndAnswer[0]), ""));
+			}
+			else{
+				picAndAnswer =pd.getAllRandom(this.getApplicationContext());
+				iv.setImageDrawable(Drawable.createFromStream(getAssets().open(picAndAnswer[0]), ""));
+			}
 		} catch (Exception e){System.out.println("You fucked up");}
 	//	if(s.equals(null)) System.out.println("String is null");
 		hint.setOnClickListener(new OnClickListener(){
@@ -58,7 +66,7 @@ public class ProblemInterface extends Activity{
 			
 			@Override
 			public void onClick(View v){
-				String dataBaseAnswer = "";
+				String dataBaseAnswer = picAndAnswer[1];
 				dataBaseAnswer=dataBaseAnswer.toUpperCase();
 				if(dataBaseAnswer.contains("E")){
 					dataBaseAnswer=dataBaseAnswer.replace("E^", "e^");
@@ -72,29 +80,52 @@ public class ProblemInterface extends Activity{
 					dataBaseAnswer=dataBaseAnswer.replace("]", ")");
                 }
 				String userInput = answer.getText().toString();
-				if(userInput.equals(dataBaseAnswer){
+				if(userInput.equals(dataBaseAnswer)){
 					CharSequence text = "Good Job!";
 					int duration = Toast.LENGTH_SHORT;
-					Toast toast = Toast.makeText(context, text, duration);
+					Toast toast = Toast.makeText(getApplicationContext(), text, duration);
 					toast.show();
-                    String [] nextPic=pd.getUnseenRandom(context),"RationalPolyLimits");
+   
                     try{
-                        iv.setImageDrawable(Drawable.createFromStream(getAssets().open(nextPic[0]), ""));}
+                    	String [] nextPic=pd.getUnseenRandom(getApplicationContext(),"RationalPolyLimits");
+                        iv.setImageDrawable(Drawable.createFromStream(getAssets().open(nextPic[0]), ""));
+                    }
                     catch(Exception e){}
-                
-				});
+				}
 			}
-			
-		});
+				});
+
+		
 		next.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View arg0) {
-				String[] nextPic = pd.getUnseenRandom(getApplicationContext(), "RationalPolyLimits");
 				try{
-				iv.setImageDrawable(Drawable.createFromStream(getAssets().open(nextPic[0]), ""));
-				} catch(Exception e){System.out.println("YOu fucked up");}
-				Log.w("answer",nextPic[1]);
+					if(!allDone){
+						picAndAnswer = pd.getUnseenRandom(getApplicationContext(), thisllDoForNow[pointer]);
+						iv.setImageDrawable(Drawable.createFromStream(getAssets().open(picAndAnswer[0]), ""));
+					}
+					else{
+						picAndAnswer = pd.getAllRandom(getApplicationContext());
+						iv.setImageDrawable(Drawable.createFromStream(getAssets().open(picAndAnswer[0]), ""));
+					}
+				} catch(DoneWithProblemType e){
+					Log.w("error ",e.getMessage());
+					if(pointer==thisllDoForNow.length-1){
+						//tell them congrats theyre done!!!
+						getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("CompletedAll",true).commit();
+					}
+					else{
+						//Display congrats you're done with "Insert problem type"
+						pointer++;
+						getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putInt("LevelCounter",pointer).commit();
+						try{
+							picAndAnswer = pd.getUnseenRandom(getApplicationContext(), thisllDoForNow[pointer]);
+							iv.setImageDrawable(Drawable.createFromStream(getAssets().open(picAndAnswer[0]), ""));
+						} catch(Exception a){}
+					}
+				}catch(IOException e){Log.w("IOException", "IOException occured trying to getUnseenRandom from DB and creating the Drawable");}
+				
 			}
 			
 		});

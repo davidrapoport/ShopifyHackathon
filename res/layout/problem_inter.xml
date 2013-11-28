@@ -7,13 +7,16 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
  >
+
       <ImageView
-        android:id="@+id/problem"
-        android:layout_width="fill_parent"
-        android:layout_height="160dp"
-        android:src="@drawable/ajsboobs"
-        android:contentDescription="@string/The_problem"
-        ></ImageView>
+          android:id="@+id/problem"
+          android:layout_width="300dp"
+          android:layout_height="160dp"
+          android:layout_toEndOf="@+id/problemModifier"
+          android:layout_alignParentRight="True"
+          android:contentDescription="@string/The_problem"
+          android:src="@drawable/ajsboobs" >
+</ImageView>
 
     <EditText
         android:id="@+id/solution"
@@ -67,5 +70,14 @@
           android:layout_alignParentBottom="true"
           android:layout_centerHorizontal="true"
           android:text="@string/Submit" />
+
+      <ImageView
+          android:id="@+id/problemModifier"
+          android:layout_width="50dp"
+          android:layout_height="160dp"
+          android:layout_alignParentLeft="true"
+          android:layout_alignParentTop="true"
+          android:contentDescription="@string/The_problem"
+          android:src="@drawable/ajsboobs" />
 
 </RelativeLayout>

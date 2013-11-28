@@ -19,6 +19,7 @@ public class PictureDatabase extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "PictureDatabase";
 	private static final String TABLE_NAME_RATPOLY = "RATIONALPOLYLIMITS";
 	private static final String TABLE_NAME_POLYDERIV = "POLYNOMIALDERIVATIVES";
+	private static final String[] TABLE_NAMES = {"RATIONALPOLYLIMITS","POLYNOMIALDERIVATIVES"};
 	private static final int versionNumb = 1;
 
 	// private static final String[] typesOfProblems =
@@ -124,9 +125,9 @@ public class PictureDatabase extends SQLiteOpenHelper {
 
 	}
 
-	public String[] getUnseenRandom(Context context, String typeOfProblem) {
+	public String[] getUnseenRandom(Context context, String typeOfProblem) throws DoneWithProblemType{
 		// Throw an exception if no more are left
-		SQLiteDatabase db = getReadableDatabase();
+		SQLiteDatabase db = getWritableDatabase();
 		// Cursor test = db.query(typeOfProblem.toUpperCase(), new String[]
 		// {"imageBitmap","seen","answer"}, null, null, null, null, null);
 		// Log.w("cursor test if empty", "" + test.moveToLast());
@@ -135,16 +136,16 @@ public class PictureDatabase extends SQLiteOpenHelper {
 		Cursor curs = db.query(typeOfProblem.toUpperCase(), new String[] {
 				"imageBitmap", "seen", "answer" }, "seen='false'", null, null,
 				null, null);
-
+		System.out.println(curs.getCount()+ "    rows");
 		String[] picAndAnswers = new String[2];
-		if (curs != null) {
+		if (curs.getCount()!=0) {
 			curs.moveToNext();
 			picAndAnswers[0] = curs.getString(0);
 			picAndAnswers[1] = curs.getString(2);
 			curs.close();
 			ContentValues vals = new ContentValues();
 			vals.put("imageBitmap", picAndAnswers[0]);
-			vals.put("seen", "'true'");
+			vals.put("seen", "true");
 			vals.put("answer", picAndAnswers[1]);
 			int affected = db.update(typeOfProblem.toUpperCase(), vals,
 					"imageBitmap='" + picAndAnswers[0] + "'", null);
@@ -155,8 +156,48 @@ public class PictureDatabase extends SQLiteOpenHelper {
 			return picAndAnswers;
 		} else {
 			System.out.println("null cursor");
+			String query= "UPDATE "+ typeOfProblem.toUpperCase()+ " set seen = 'true' where seen = 'false'";
+			ContentValues cv = new ContentValues();
+			cv.put("seen", "false");
+			System.out.println(db.update(typeOfProblem.toUpperCase(), cv, "seen='true'", null));
+			curs.close();
+			/*Cursor cursor = db.query(typeOfProblem.toUpperCase(), new String[] {
+				"imageBitmap", "seen", "answer" }, null, null, null,
+				null, null);
+			System.out.println(cursor.getCount() + "  rows");
+			System.out.println(cursor.getColumnCount() + "  columns");
+			cursor.moveToNext();
+			System.out.println(cursor.getString(0));
+			System.out.println(cursor.getString(1));
+			System.out.println(cursor.getString(2));*/
+			//db.execSQL(query);
+			//System.out.println(cursor.getCount());
+			throw new DoneWithProblemType(typeOfProblem);
+			
 		}
-		return picAndAnswers;
+		//return picAndAnswers;
 	}
+	public String[] getAllRandom(Context context){
+		SQLiteDatabase db = getWritableDatabase();
+		int random = ((int) Math.random()) % TABLE_NAMES.length;
+		Cursor curs = db.query(TABLE_NAMES[random], new String[] {
+				"imageBitmap", "seen", "answer" }, null, null, null,
+				null, null);
+		String[] picAndAnswers = new String[2];
+		if (curs.getCount()!=0) {
+			int secondRandom= ((int) Math.random()) % curs.getCount();
+			curs.moveToPosition(secondRandom);
+			picAndAnswers[0] = curs.getString(0);
+			picAndAnswers[1] = curs.getString(2);
+			curs.close();
+			return picAndAnswers;
+		} else {
+			Log.w("getAllRandom", "Error calling getAllRandom, cursor had size 0");
+			
+		}
+		//return picAndAnswers;
+		return null;
+	}
+
 
 }
