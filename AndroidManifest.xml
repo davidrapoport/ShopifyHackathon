@@ -30,6 +30,10 @@
             android:name="com.McGillShopify.DMA.math140.Timer"
             android:label="@string/title_activity_timer" >
         </activity>
+        <activity
+            android:name="com.McGillShopify.DMA.math140.DisplayTimer"
+            android:label="@string/title_activity_display_timer" >
+        </activity>
     </application>
 
 </manifest>

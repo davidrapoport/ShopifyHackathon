@@ -10,5 +10,9 @@
     <string name="Next">Next</string>
     <string name="Previous">Previous</string>
     <string name="title_activity_timer">Timer</string>
+    <string name="title_activity_display_timer">DisplayTimer</string>
+
+</resources>
+
 
 </resources>
